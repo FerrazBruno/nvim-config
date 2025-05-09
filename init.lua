@@ -169,6 +169,7 @@ require('lazy').setup({
   'tpope/vim-dispatch',
   'clojure-vim/vim-jack-in',
   'radenling/vim-dispatch-neovim',
+  'guns/vim-sexp',
   -- 'tpope/vim-surround',
   'HiPhish/rainbow-delimiters.nvim',
   {
@@ -176,12 +177,12 @@ require('lazy').setup({
     event = 'InsertEnter',
     config = true,
   },
-  {
-    'julienvincent/nvim-paredit',
-    config = function()
-      require('nvim-paredit').setup()
-    end,
-  },
+  -- {
+  --   'julienvincent/nvim-paredit',
+  --   config = function()
+  --     require('nvim-paredit').setup()
+  --   end,
+  -- },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -278,6 +279,9 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
+        { '<leader>x', group = 'E[X]ecute the current form' },
+        { '<leader>v', group = '[V]iew results' },
+        { '<leader>c', group = '[C]onnect/Disconnect to REPL' },
         { '<leader>e', group = '[E]valuate form' },
         { '<leader>g', group = '[G]et definition' },
         { '<leader>r', group = '[R]un execute Conjure' },
