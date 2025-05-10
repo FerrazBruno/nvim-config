@@ -170,7 +170,7 @@ require('lazy').setup({
   'clojure-vim/vim-jack-in',
   'radenling/vim-dispatch-neovim',
   'guns/vim-sexp',
-  -- 'tpope/vim-surround',
+  'tpope/vim-surround',
   'HiPhish/rainbow-delimiters.nvim',
   {
     'windwp/nvim-autopairs',
