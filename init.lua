@@ -888,7 +888,11 @@ require('lazy').setup({
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
       statusline.section_location = function()
-        return '%2l:%-2v'
+        local line = vim.fn.line '.'
+        local total_lines = vim.fn.line '$'
+        local col = vim.fn.col '.'
+        local line_length = #(vim.fn.getline '.')
+        return string.format('%d|%d | %d|%d', line, total_lines, col, line_length)
       end
 
       -- ... and there is more!
