@@ -176,6 +176,10 @@ require('lazy').setup({
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     config = true,
+    opts = {
+      check_ts = true,
+      enable_check_bracket_line = false,
+    },
   },
   -- {
   --   'julienvincent/nvim-paredit',
