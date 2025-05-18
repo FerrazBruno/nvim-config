@@ -892,7 +892,7 @@ require('lazy').setup({
         local total_lines = vim.fn.line '$'
         local col = vim.fn.col '.'
         local line_length = #(vim.fn.getline '.')
-        return string.format('%d|%d | %d|%d', line, total_lines, col, line_length)
+        return string.format('%d:%d | %d:%d', line, total_lines, col, line_length)
       end
 
       -- ... and there is more!
