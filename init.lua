@@ -181,6 +181,40 @@ require('lazy').setup({
       enable_check_bracket_line = false,
     },
   },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function ()
+      local harpoon = require("harpoon")
+
+      -- REQUIRED
+      harpoon:setup()
+      -- REQUIRED
+
+      vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+      vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
+      vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
+      vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
+      vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set("n", "<leader>pp", function() harpoon:list():prev() end)
+      vim.keymap.set("n", "<leader>pn", function() harpoon:list():next() end)
+
+      -- Remove marke files
+      vim.keymap.set("n", "<leader>r1", function() harpoon:list():remove_at(1) end)
+      vim.keymap.set("n", "<leader>r2", function() harpoon:list():remove_at(2) end)
+      vim.keymap.set("n", "<leader>r3", function() harpoon:list():remove_at(3) end)
+      vim.keymap.set("n", "<leader>r4", function() harpoon:list():remove_at(4) end)
+
+      -- Clear harpoon
+      vim.keymap.set("n", "<leader>ch", function() harpoon:list():clear(4) end)
+
+    end
+  },
   -- {
   --   'julienvincent/nvim-paredit',
   --   config = function()
@@ -294,6 +328,14 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>a', group = '[A]dd harpoon' },
+        { '<leader>1', group = 'Harppon 1' },
+        { '<leader>2', group = 'Harppon 2' },
+        { '<leader>3', group = 'Harppon 3' },
+        { '<leader>4', group = 'Harppon 4' },
+        { '<leader>ch', group = 'Clear Harpoon' },
+        { '<leader>pp', group = 'Harpoon prev' },
+        { '<leader>pn', group = 'Harpoon next' },
       },
     },
   },
@@ -375,7 +417,7 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sa', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
