@@ -182,38 +182,63 @@ require('lazy').setup({
     },
   },
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    config = function ()
-      local harpoon = require("harpoon")
+    'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local harpoon = require 'harpoon'
 
       -- REQUIRED
       harpoon:setup()
       -- REQUIRED
 
-      vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
-      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+      vim.keymap.set('n', '<leader>a', function()
+        harpoon:list():add()
+      end)
+      vim.keymap.set('n', '<C-e>', function()
+        harpoon.ui:toggle_quick_menu(harpoon:list())
+      end)
 
-      vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end)
-      vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end)
-      vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end)
-      vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end)
+      vim.keymap.set('n', '<leader>1', function()
+        harpoon:list():select(1)
+      end)
+      vim.keymap.set('n', '<leader>2', function()
+        harpoon:list():select(2)
+      end)
+      vim.keymap.set('n', '<leader>3', function()
+        harpoon:list():select(3)
+      end)
+      vim.keymap.set('n', '<leader>4', function()
+        harpoon:list():select(4)
+      end)
 
       -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "<leader>pp", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "<leader>pn", function() harpoon:list():next() end)
+      vim.keymap.set('n', '<leader>pp', function()
+        harpoon:list():prev()
+      end)
+      vim.keymap.set('n', '<leader>pn', function()
+        harpoon:list():next()
+      end)
 
       -- Remove marke files
-      vim.keymap.set("n", "<leader>r1", function() harpoon:list():remove_at(1) end)
-      vim.keymap.set("n", "<leader>r2", function() harpoon:list():remove_at(2) end)
-      vim.keymap.set("n", "<leader>r3", function() harpoon:list():remove_at(3) end)
-      vim.keymap.set("n", "<leader>r4", function() harpoon:list():remove_at(4) end)
+      vim.keymap.set('n', '<leader>r1', function()
+        harpoon:list():remove_at(1)
+      end)
+      vim.keymap.set('n', '<leader>r2', function()
+        harpoon:list():remove_at(2)
+      end)
+      vim.keymap.set('n', '<leader>r3', function()
+        harpoon:list():remove_at(3)
+      end)
+      vim.keymap.set('n', '<leader>r4', function()
+        harpoon:list():remove_at(4)
+      end)
 
       -- Clear harpoon
-      vim.keymap.set("n", "<leader>ch", function() harpoon:list():clear(4) end)
-
-    end
+      vim.keymap.set('n', '<leader>ch', function()
+        harpoon:list():clear(4)
+      end)
+    end,
   },
   -- {
   --   'julienvincent/nvim-paredit',
@@ -929,13 +954,6 @@ require('lazy').setup({
       -- default behavior. For example, here we set the section for
       -- cursor location to LINE:COLUMN
       ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        local line = vim.fn.line '.'
-        local total_lines = vim.fn.line '$'
-        local col = vim.fn.col '.'
-        local line_length = #(vim.fn.getline '.')
-        return string.format('%d:%d | %d:%d', line, total_lines, col, line_length)
-      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
