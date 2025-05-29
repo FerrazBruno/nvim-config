@@ -84,6 +84,14 @@ vim.opt.smartindent = true
 vim.opt.colorcolumn = '80'
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Explore files and directories' })
 
+-- Configuração de folding para nvim-ufo
+vim.o.foldcolumn = '0' -- Mostra coluna de fold
+vim.o.foldlevel = 99 -- Começa com tudo aberto
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true -- Ativa folding por padrão
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -238,6 +246,17 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ch', function()
         harpoon:list():clear(4)
       end)
+    end,
+  },
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = { 'kevinhwang91/promise-async' },
+    config = function()
+      require('ufo').setup {
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'indent' }
+        end,
+      }
     end,
   },
   -- {
