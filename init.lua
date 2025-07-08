@@ -92,6 +92,9 @@ vim.o.foldenable = true -- Ativa folding por padrão
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
 
+-- jj = Esc
+vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 --  Next buffer
@@ -118,8 +121,9 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 -- TIP: Disable arrow keys in normal mode
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
-vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
-vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
+-- Using in multiple cursors
+-- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
+-- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
@@ -182,7 +186,7 @@ require('lazy').setup({
   'tpope/vim-dispatch',
   'clojure-vim/vim-jack-in',
   'radenling/vim-dispatch-neovim',
-  'guns/vim-sexp',
+  -- 'guns/vim-sexp',
   'tpope/vim-surround',
   'HiPhish/rainbow-delimiters.nvim',
   {
@@ -194,17 +198,78 @@ require('lazy').setup({
       enable_check_bracket_line = false,
     },
   },
-  -- {
-  --   'kevinhwang91/nvim-ufo',
-  --   dependencies = { 'kevinhwang91/promise-async' },
-  --   config = function()
-  --     require('ufo').setup {
-  --       provider_selector = function(bufnr, filetype, buftype)
-  --         return { 'indent' }
-  --       end,
-  --     }
-  --   end,
-  -- },
+  {
+    "jake-stewart/multicursor.nvim",
+    branch = "1.0",
+    config = function()
+        local mc = require("multicursor-nvim")
+        mc.setup()
+
+        local set = vim.keymap.set
+
+        -- Add or skip cursor above/below the main cursor.
+        set({"n", "x"}, "<up>", function() mc.lineAddCursor(-1) end)
+        set({"n", "x"}, "<down>", function() mc.lineAddCursor(1) end)
+        set({"n", "x"}, "<leader><up>", function() mc.lineSkipCursor(-1) end)
+        set({"n", "x"}, "<leader><down>", function() mc.lineSkipCursor(1) end)
+
+        -- Add or skip adding a new cursor by matching word/selection
+        set({"n", "x"}, "<leader>n", function() mc.matchAddCursor(1) end)
+        set({"n", "x"}, "<leader>m", function() mc.matchSkipCursor(1) end)
+        set({"n", "x"}, "<leader>N", function() mc.matchAddCursor(-1) end)
+        set({"n", "x"}, "<leader>M", function() mc.matchSkipCursor(-1) end)
+
+        -- Add and remove cursors with control + left click.
+        set("n", "<c-leftmouse>", mc.handleMouse)
+        set("n", "<c-leftdrag>", mc.handleMouseDrag)
+        set("n", "<c-leftrelease>", mc.handleMouseRelease)
+
+        -- Disable and enable cursors.
+        set({"n", "x"}, "<c-q>", mc.toggleCursor)
+
+        -- Mappings defined in a keymap layer only apply when there are
+        -- multiple cursors. This lets you have overlapping mappings.
+        mc.addKeymapLayer(function(layerSet)
+
+            -- Select a different cursor as the main one.
+            layerSet({"n", "x"}, "<left>", mc.prevCursor)
+            layerSet({"n", "x"}, "<right>", mc.nextCursor)
+
+            -- Delete the main cursor.
+            layerSet({"n", "x"}, "<leader>x", mc.deleteCursor)
+
+            -- Enable and clear cursors using escape.
+            layerSet("n", "<esc>", function()
+                if not mc.cursorsEnabled() then
+                    mc.enableCursors()
+                else
+                    mc.clearCursors()
+                end
+            end)
+        end)
+
+        -- Customize how cursors look.
+        local hl = vim.api.nvim_set_hl
+        hl(0, "MultiCursorCursor", { reverse = true })
+        hl(0, "MultiCursorVisual", { link = "Visual" })
+        hl(0, "MultiCursorSign", { link = "SignColumn"})
+        hl(0, "MultiCursorMatchPreview", { link = "Search" })
+        hl(0, "MultiCursorDisabledCursor", { reverse = true })
+        hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+        hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
+    end
+  },
+  {
+    'kevinhwang91/nvim-ufo',
+    dependencies = { 'kevinhwang91/promise-async' },
+    config = function()
+      require('ufo').setup {
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'indent' }
+        end,
+      }
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -312,6 +377,12 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>n', group = 'Add new cursor bellow (w/s)' },
+        { '<leader>m', group = 'Skip cursor word bellow (w/s)' },
+        { '<leader>N', group = 'Add new cursor above (w/s)' },
+        { '<leader>M', group = 'Skip cursor above (w/s)' },
+        { '<leader><up>', group = 'Skip cursor above' },
+        { '<leader><down>', group = 'Skip cursor bellow' },
       },
     },
   },
@@ -702,46 +773,46 @@ require('lazy').setup({
     end,
   },
 
-  { -- Autoformat
-    'stevearc/conform.nvim',
-    event = { 'BufWritePre' },
-    cmd = { 'ConformInfo' },
-    keys = {
-      {
-        '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
-        mode = '',
-        desc = '[F]ormat buffer',
-      },
-    },
-    opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
-      formatters_by_ft = {
-        lua = { 'stylua' },
-        -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
-        -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
-      },
-    },
-  },
+  -- { -- Autoformat
+  --   'stevearc/conform.nvim',
+  --   event = { 'BufWritePre' },
+  --   cmd = { 'ConformInfo' },
+  --   keys = {
+  --     {
+  --       '<leader>f',
+  --       function()
+  --         require('conform').format { async = true, lsp_format = 'fallback' }
+  --       end,
+  --       mode = '',
+  --       desc = '[F]ormat buffer',
+  --     },
+  --   },
+  --   opts = {
+  --     notify_on_error = false,
+  --     format_on_save = function(bufnr)
+  --       -- Disable "format_on_save lsp_fallback" for languages that don't
+  --       -- have a well standardized coding style. You can add additional
+  --       -- languages here or re-enable it for the disabled ones.
+  --       local disable_filetypes = { c = true, cpp = true }
+  --       if disable_filetypes[vim.bo[bufnr].filetype] then
+  --         return nil
+  --       else
+  --         return {
+  --           timeout_ms = 500,
+  --           lsp_format = 'fallback',
+  --         }
+  --       end
+  --     end,
+  --     formatters_by_ft = {
+  --       lua = { 'stylua' },
+  --       -- Conform can also run multiple formatters sequentially
+  --       -- python = { "isort", "black" },
+  --       --
+  --       -- You can use 'stop_after_first' to run the first available formatter from the list
+  --       -- javascript = { "prettierd", "prettier", stop_after_first = true },
+  --     },
+  --   },
+  -- },
 
   { -- Autocompletion
     'saghen/blink.cmp',
