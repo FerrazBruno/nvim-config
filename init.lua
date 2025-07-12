@@ -377,12 +377,12 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
-        { '<leader>n', group = 'Add new cursor bellow (w/s)' },
-        { '<leader>m', group = 'Skip cursor word bellow (w/s)' },
+        { '<leader>n', group = 'Add new cursor below (w/s)' },
+        { '<leader>m', group = 'Skip cursor word below (w/s)' },
         { '<leader>N', group = 'Add new cursor above (w/s)' },
         { '<leader>M', group = 'Skip cursor above (w/s)' },
         { '<leader><up>', group = 'Skip cursor above' },
-        { '<leader><down>', group = 'Skip cursor bellow' },
+        { '<leader><down>', group = 'Skip cursor below' },
       },
     },
   },
@@ -931,7 +931,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'tokyonight-storm'
       -- Transparence.
       vim.cmd [[
         highlight Normal guibg=NONE ctermbg=NONE
