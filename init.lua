@@ -1,3 +1,7 @@
+-- instalar clojure_lsp
+-- instalar unzip (lua)
+-- instalar compilador gcc
+-- instalar xclip (se estiver no wsl)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -188,7 +192,7 @@ require('lazy').setup({
   'radenling/vim-dispatch-neovim',
   -- 'guns/vim-sexp',
   'tpope/vim-surround',
-  'HiPhish/rainbow-delimiters.nvim',
+  -- 'HiPhish/rainbow-delimiters.nvim',
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
@@ -1069,9 +1073,9 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-vim.api.nvim_set_hl(0, "MatchParen", {
-  fg = "#ff007c",
-  bg = "NONE",
-  bold = true,
-  underline = false
-})
+-- vim.api.nvim_set_hl(0, "MatchParen", {
+--   fg = "#ff007c",
+--   bg = "NONE",
+--   bold = true,
+--   underline = false
+-- })
