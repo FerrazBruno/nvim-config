@@ -80,6 +80,7 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 -- Preferences.
+vim.opt.guicursor = ""
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
@@ -192,7 +193,7 @@ require('lazy').setup({
   'radenling/vim-dispatch-neovim',
   -- 'guns/vim-sexp',
   'tpope/vim-surround',
-  -- 'HiPhish/rainbow-delimiters.nvim',
+  'HiPhish/rainbow-delimiters.nvim',
   {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
@@ -544,6 +545,15 @@ require('lazy').setup({
       'saghen/blink.cmp',
     },
     config = function()
+      -- vim.lsp.handlers["textDocument/semanticTokens/full"] = function() end
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.supports_method("textDocument/semanticTokens/full") then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+        end,
+      })
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -926,40 +936,60 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
+  {
+    "p00f/alabaster.nvim",
+    lazy = false,
+    priority = 1000,
     config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-storm'
-      -- Transparence.
-      vim.cmd [[
-        highlight Normal guibg=NONE ctermbg=NONE
-        highlight NormalNC guibg=NONE ctermbg=NONE
-        highlight NormalFloat guibg=NONE ctermbg=NONE
-        highlight FloatBorder guibg=NONE ctermbg=NONE
-        highlight SignColumn guibg=NONE ctermbg=NONE
-        highlight VertSplit guibg=NONE ctermbg=NONE
-      ]]
+      vim.cmd.colorscheme("alabaster")
+      -- fundo claro opcional (alabaster tem dark e light)
+      vim.o.background = "light"
     end,
   },
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = {
+      options = {
+        theme = "alabaster",
+        section_separators = "",
+        component_separators = ""
+      },
+    },
+  },
+
+  -- { -- You can easily change to a different colorscheme.
+  --   -- Change the name of the colorscheme plugin below, and then
+  --   -- change the command in the config to whatever the name of that colorscheme is.
+  --   --
+  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+  --   'folke/tokyonight.nvim',
+  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  --   config = function()
+  --     ---@diagnostic disable-next-line: missing-fields
+  --     require('tokyonight').setup {
+  --       styles = {
+  --         comments = { italic = false }, -- Disable italics in comments
+  --       },
+  --     }
+  --
+  --     -- Load the colorscheme here.
+  --     -- Like many other themes, this one has different styles, and you could load
+  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+  --     vim.cmd.colorscheme 'tokyonight-day'
+  --     -- Transparence.
+  --     -- vim.cmd [[
+  --     --   highlight Normal guibg=NONE ctermbg=NONE
+  --     --   highlight NormalNC guibg=NONE ctermbg=NONE
+  --     --   highlight NormalFloat guibg=NONE ctermbg=NONE
+  --     --   highlight FloatBorder guibg=NONE ctermbg=NONE
+  --     --   highlight SignColumn guibg=NONE ctermbg=NONE
+  --     --   highlight VertSplit guibg=NONE ctermbg=NONE
+  --     -- ]]
+  --   end,
+  -- },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  -- { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -982,9 +1012,9 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
+      -- local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
-      statusline.setup { use_icons = vim.g.have_nerd_font }
+      -- statusline.setup { use_icons = vim.g.have_nerd_font }
 
       -- You can configure sections in the statusline by overriding their
       -- default behavior. For example, here we set the section for
@@ -1074,8 +1104,9 @@ require('lazy').setup({
 -- vim: ts=2 sts=2 sw=2 et
 
 -- vim.api.nvim_set_hl(0, "MatchParen", {
---   fg = "#ff007c",
+--   fg = "#000000",
 --   bg = "NONE",
 --   bold = true,
 --   underline = false
 -- })
+
