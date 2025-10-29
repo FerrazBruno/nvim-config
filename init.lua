@@ -950,9 +950,9 @@ require('lazy').setup({
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
-        theme = "alabaster",
-        section_separators = "",
-        component_separators = ""
+        theme = "onelight",
+        section_separators = { left = "", right = "" },
+        component_separators = { left = " ", right = " " },
       },
     },
   },
@@ -1067,6 +1067,8 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  -- require 'lualine.themes.slanted-gaps',
+
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1103,10 +1105,5 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
--- vim.api.nvim_set_hl(0, "MatchParen", {
---   fg = "#000000",
---   bg = "NONE",
---   bold = true,
---   underline = false
--- })
+vim.api.nvim_set_hl(0, "MatchParen", { bold = true })
 
