@@ -492,7 +492,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>/', function()
         -- You can pass additional configuration to Telescope to change the theme, layout, etc.
         builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
+          -- winblend = 10,
           previewer = false,
         })
       end, { desc = '[/] Fuzzily search in current buffer' })
@@ -943,16 +943,16 @@ require('lazy').setup({
     config = function()
       vim.cmd.colorscheme("alabaster")
       -- fundo claro opcional (alabaster tem dark e light)
-      vim.o.background = "light"
+      vim.o.background = "dark"
     end,
   },
   {
     "nvim-lualine/lualine.nvim",
     opts = {
       options = {
-        theme = "onelight",
-        section_separators = { left = "", right = "" },
-        component_separators = { left = " ", right = " " },
+        theme = "onedark",
+        section_separators = { left = "", right = "" },
+        component_separators = { left = "", right = "" },
       },
     },
   },
@@ -1012,6 +1012,7 @@ require('lazy').setup({
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
+
       -- local statusline = require 'mini.statusline'
       -- set use_icons to true if you have a Nerd Font
       -- statusline.setup { use_icons = vim.g.have_nerd_font }
@@ -1067,7 +1068,6 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-  -- require 'lualine.themes.slanted-gaps',
 
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
