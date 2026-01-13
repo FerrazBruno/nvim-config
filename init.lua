@@ -1,7 +1,8 @@
--- instalar clojure_lsp
+-- instalar clojure_lsp (:LspInstall clojure_lsp)
 -- instalar unzip (lua)
 -- instalar compilador gcc
 -- instalar xclip (se estiver no wsl)
+-- instalar ripgrep (sudo apt-get install ripgrep)
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -80,7 +81,7 @@ vim.opt.scrolloff = 10
 vim.opt.confirm = true
 
 -- Preferences.
-vim.opt.guicursor = ""
+-- vim.opt.guicursor = "" -- Cursor em bloco.
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.shiftwidth = 2
@@ -90,12 +91,12 @@ vim.opt.colorcolumn = '80'
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Explore files and directories' })
 
 -- Configuração de folding para nvim-ufo
-vim.o.foldcolumn = '0' -- Mostra coluna de fold
-vim.o.foldlevel = 99 -- Começa com tudo aberto
-vim.o.foldlevelstart = 99
-vim.o.foldenable = true -- Ativa folding por padrão
-vim.o.foldmethod = 'expr'
-vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
+-- vim.o.foldcolumn = '0' -- Mostra coluna de fold
+-- vim.o.foldlevel = 99 -- Começa com tudo aberto
+-- vim.o.foldlevelstart = 99
+vim.o.foldenable = false -- Ativa folding por padrão
+-- vim.o.foldmethod = 'expr'
+-- vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
 
 -- jj = Esc
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
@@ -203,7 +204,7 @@ require('lazy').setup({
       enable_check_bracket_line = false,
     },
   },
-  {
+  { -- Múltiplos cursores. Ajuda a editar várias linhas.
     "jake-stewart/multicursor.nvim",
     branch = "1.0",
     config = function()
@@ -264,17 +265,17 @@ require('lazy').setup({
         hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
     end
   },
-  {
-    'kevinhwang91/nvim-ufo',
-    dependencies = { 'kevinhwang91/promise-async' },
-    config = function()
-      require('ufo').setup {
-        provider_selector = function(bufnr, filetype, buftype)
-          return { 'indent' }
-        end,
-      }
-    end,
-  },
+  -- { -- Plugin para controlar 'fold' e 'unfold' de funções.
+  --   'kevinhwang91/nvim-ufo',
+  --   dependencies = { 'kevinhwang91/promise-async' },
+  --   config = function()
+  --     require('ufo').setup {
+  --       provider_selector = function(bufnr, filetype, buftype)
+  --         return { 'indent' }
+  --       end,
+  --     }
+  --   end,
+  -- },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -316,9 +317,10 @@ require('lazy').setup({
     end
   },
 
-  {
-    'tpope/vim-fugitive'
-  },
+  -- Plugin para usar git.
+  -- {
+  --   'tpope/vim-fugitive'
+  -- },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -546,14 +548,16 @@ require('lazy').setup({
     },
     config = function()
       -- vim.lsp.handlers["textDocument/semanticTokens/full"] = function() end
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client and client.supports_method("textDocument/semanticTokens/full") then
-            client.server_capabilities.semanticTokensProvider = nil
-          end
-        end,
-      })
+      -- Alguns temas não lidam bem com a mudança de cores entre ":" e o nome da keyword.
+      -- Isso ajuda a não ficar descasado as cores das keywords. (alabaster é um exemplo)
+      -- vim.api.nvim_create_autocmd("LspAttach", {
+      --   callback = function(args)
+      --     local client = vim.lsp.get_client_by_id(args.data.client_id)
+      --     if client and client.supports_method("textDocument/semanticTokens/full") then
+      --       client.server_capabilities.semanticTokensProvider = nil
+      --     end
+      --   end,
+      -- })
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -936,57 +940,61 @@ require('lazy').setup({
       signature = { enabled = true },
     },
   },
-  {
-    "p00f/alabaster.nvim",
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme("alabaster")
-      -- fundo claro opcional (alabaster tem dark e light)
-      vim.o.background = "dark"
-    end,
-  },
-  {
-    "nvim-lualine/lualine.nvim",
-    opts = {
-      options = {
-        theme = "onedark",
-        section_separators = { left = "", right = "" },
-        component_separators = { left = "", right = "" },
-      },
-    },
-  },
-
-  -- { -- You can easily change to a different colorscheme.
-  --   -- Change the name of the colorscheme plugin below, and then
-  --   -- change the command in the config to whatever the name of that colorscheme is.
-  --   --
-  --   -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-  --   'folke/tokyonight.nvim',
-  --   priority = 1000, -- Make sure to load this before all the other start plugins.
+  -- Tema clean.
+  -- {
+  --   "p00f/alabaster.nvim",
+  --   lazy = false,
+  --   priority = 1000,
   --   config = function()
-  --     ---@diagnostic disable-next-line: missing-fields
-  --     require('tokyonight').setup {
-  --       styles = {
-  --         comments = { italic = false }, -- Disable italics in comments
-  --       },
-  --     }
-  --
-  --     -- Load the colorscheme here.
-  --     -- Like many other themes, this one has different styles, and you could load
-  --     -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-  --     vim.cmd.colorscheme 'tokyonight-day'
-  --     -- Transparence.
-  --     -- vim.cmd [[
-  --     --   highlight Normal guibg=NONE ctermbg=NONE
-  --     --   highlight NormalNC guibg=NONE ctermbg=NONE
-  --     --   highlight NormalFloat guibg=NONE ctermbg=NONE
-  --     --   highlight FloatBorder guibg=NONE ctermbg=NONE
-  --     --   highlight SignColumn guibg=NONE ctermbg=NONE
-  --     --   highlight VertSplit guibg=NONE ctermbg=NONE
-  --     -- ]]
+  --     vim.cmd.colorscheme("alabaster")
+  --     -- fundo claro opcional (alabaster tem dark e light)
+  --     vim.o.background = "dark"
+  --     vim.cmd [[
+  --        highlight Normal guibg=NONE ctermbg=NONE
+  --        highlight NormalNC guibg=NONE ctermbg=NONE
+  --        highlight NormalFloat guibg=NONE ctermbg=NONE
+  --        highlight FloatBorder guibg=NONE ctermbg=NONE
+  --        highlight SignColumn guibg=NONE ctermbg=NONE
+  --        highlight VertSplit guibg=NONE ctermbg=NONE
+  --        ]]
   --   end,
   -- },
+  {
+    "nvim-lualine/lualine.nvim",
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+  },
+
+  { -- You can easily change to a different colorscheme.
+    -- Change the name of the colorscheme plugin below, and then
+    -- change the command in the config to whatever the name of that colorscheme is.
+    --
+    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+    'folke/tokyonight.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    config = function()
+      ---@diagnostic disable-next-line: missing-fields
+      require('tokyonight').setup {
+        styles = {
+          comments = { italic = false }, -- Disable italics in comments
+          -- keywords = { italic = false }, -- defmacro fica em italico e isso resolve, não sei porque.
+        },
+      }
+
+      -- Load the colorscheme here.
+      -- Like many other themes, this one has different styles, and you could load
+      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+      vim.cmd.colorscheme 'tokyonight-night'
+      -- Deixar o fundo transparente do neovim.
+      -- vim.cmd [[
+      --   highlight Normal guibg=NONE ctermbg=NONE
+      --   highlight NormalNC guibg=NONE ctermbg=NONE
+      --   highlight NormalFloat guibg=NONE ctermbg=NONE
+      --   highlight FloatBorder guibg=NONE ctermbg=NONE
+      --   highlight SignColumn guibg=NONE ctermbg=NONE
+      --   highlight VertSplit guibg=NONE ctermbg=NONE
+      -- ]]
+    end,
+  },
 
   -- Highlight todo, notes, etc in comments
   -- { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
@@ -1105,5 +1113,6 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
-vim.api.nvim_set_hl(0, "MatchParen", { bold = true })
+-- Adiciona "_" nos parênteses correspondentes.
+vim.api.nvim_set_hl(0, "MatchParen", { underline = true })
 
