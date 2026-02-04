@@ -95,7 +95,7 @@ vim.o.foldcolumn = '0' -- Mostra coluna de fold
 vim.o.foldlevel = 99 -- Começa com tudo aberto
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true -- Ativa folding por padrão
--- vim.o.foldmethod = 'expr'
+vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
 
 -- jj = Esc
@@ -1151,6 +1151,10 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Utilizar o fold do 'ufo' em vez do proprio nvim.
+vim.keymap.set('n', 'zM', function() require('ufo').closeAllFolds() end, { desc = 'UFO: close all folds' })
+vim.keymap.set('n', 'zR', function() require('ufo').openAllFolds() end, { desc = 'UFO: open all folds' })
 
 -- Adiciona "_" nos parênteses correspondentes.
 vim.api.nvim_set_hl(0, "MatchParen", { underline = true })
