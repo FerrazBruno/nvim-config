@@ -91,12 +91,12 @@ vim.opt.colorcolumn = '80'
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex, { desc = 'Explore files and directories' })
 
 -- Configuração de folding para nvim-ufo
--- vim.o.foldcolumn = '0' -- Mostra coluna de fold
--- vim.o.foldlevel = 99 -- Começa com tudo aberto
--- vim.o.foldlevelstart = 99
-vim.o.foldenable = false -- Ativa folding por padrão
+vim.o.foldcolumn = '0' -- Mostra coluna de fold
+vim.o.foldlevel = 99 -- Começa com tudo aberto
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true -- Ativa folding por padrão
 -- vim.o.foldmethod = 'expr'
--- vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()' -- Usado só como fallback
 
 -- jj = Esc
 vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
@@ -265,17 +265,17 @@ require('lazy').setup({
         hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
     end
   },
-  -- { -- Plugin para controlar 'fold' e 'unfold' de funções.
-  --   'kevinhwang91/nvim-ufo',
-  --   dependencies = { 'kevinhwang91/promise-async' },
-  --   config = function()
-  --     require('ufo').setup {
-  --       provider_selector = function(bufnr, filetype, buftype)
-  --         return { 'indent' }
-  --       end,
-  --     }
-  --   end,
-  -- },
+  { -- Plugin para controlar 'fold' e 'unfold' de funções.
+    'kevinhwang91/nvim-ufo',
+    dependencies = { 'kevinhwang91/promise-async' },
+    config = function()
+      require('ufo').setup {
+        provider_selector = function(bufnr, filetype, buftype)
+          return { 'indent' }
+        end,
+      }
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
