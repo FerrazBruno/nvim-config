@@ -265,6 +265,11 @@ require('lazy').setup({
         hl(0, "MultiCursorDisabledSign", { link = "SignColumn"})
     end
   },
+  {
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
   { -- Plugin para controlar 'fold' e 'unfold' de funções.
     'kevinhwang91/nvim-ufo',
     dependencies = { 'kevinhwang91/promise-async' },
