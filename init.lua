@@ -1010,7 +1010,12 @@ require('lazy').setup({
     "nvim-lualine/lualine.nvim",
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require("lualine").setup()
+      require("lualine").setup({
+        options = {
+          component_separators = { left = "", right = "" },
+          section_separators = { left = "", right = "" },
+        },
+      })
     end,
   },
   {
@@ -1053,7 +1058,7 @@ require('lazy').setup({
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      -- require('mini.surround').setup() Esse plugin sobreescreve o keymap 's'
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
